@@ -1,0 +1,73 @@
+.export {
+	padding:50px 15px;
+}
+
+.export h1 {
+	margin:0 0 25px;
+}
+
+.export p {
+	margin:0 0 25px;
+	font-size:18px;
+}
+
+.export input.shortcode {
+	
+	text-align:center;
+	border:0px;
+}
+
+.export-button {
+	background: #33A798;
+	color:#fff;
+	padding:15px 45px;
+	border-radius:5px;
+	font-size:24px;
+	display:inline-block;
+	width:auto;
+	text-align:center;
+	text-decoration: none;
+	margin:0 0 25px;
+}
+.export-button:hover {
+	background:#287a70;
+	text-decoration: none;
+	color:#fff;
+}
+
+.table-wrap {
+	padding: 50px 15px;
+}
+
+.export table.table {
+	width:90%;
+	text-align: left;
+	max-width:100%;
+}
+
+.export .table tr:nth-child(2n) {
+	background-color: #fff;
+}
+
+.export .table td, .export .table th {
+	padding: 8px 8px;
+	display: table-cell;
+	text-align: left;
+	vertical-align: top;
+	border: 1px solid #ddd;
+}
+
+/* pager navigation arrows */
+.pager img {
+  vertical-align: middle;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+/* pager output text */
+.pager .pagedisplay {
+  padding: 0 5px 0 5px;
+ min-width: 15px;
+  text-align: center;
+  display: inline-block;
+}

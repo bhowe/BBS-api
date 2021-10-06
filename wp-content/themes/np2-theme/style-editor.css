@@ -1,0 +1,16 @@
+/** Try to get editor to match front side as much as possible **/
+/* Main column width */
+.wp-block {
+    max-width: 1200px;
+}
+ 
+/* Width of "wide" blocks */
+.wp-block[data-align="wide"] {
+    max-width: 1400px;
+}
+
+ 
+/* Width of "full-wide" blocks */
+.wp-block[data-align="full"] {
+    max-width: none;
+}
