@@ -80,6 +80,7 @@ function donate_load_scripts() {
 	// );
 	wp_localize_script( 'validate-js', 'save_form_ajax', array( 'ajaxurl' => admin_url('admin-ajax.php')) );
 	wp_enqueue_style( 'donate-front-style', plugin_dir_url( __FILE__ ) . 'css/paypal-frontend-style.css' );
+	wp_enqueue_style( 'donate-front-custom-style', plugin_dir_url( __FILE__ ) . 'css/paypal-custom-style.css' );
 }
 add_action( 'wp_enqueue_scripts', 'donate_load_scripts');
 
@@ -168,3 +169,8 @@ $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
 
 //Optional: If you're using a private repository, specify the access token like this:
 $myUpdateChecker->setAuthentication('18960f6fe790a1e9daec1bc585700b12799c5830');
+
+function custom_blocks_init() {
+	require_once 'blocks/donations-block.php';
+}
+add_action( 'plugins_loaded', 'custom_blocks_init' );

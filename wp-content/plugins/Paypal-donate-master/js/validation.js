@@ -49,6 +49,19 @@ jQuery(document).ready(function($) {
 
 	$('input[name="frequency"]').on('change',function(){
 		var $this = $(this);
+	 	$('label[for="'+ $this.attr('id') +'"]').siblings().removeClass('selected');
+        $('label[for="'+ $this.attr('id') +'"]').toggleClass('selected');
+
+        if($this.val() == '_donations') {
+        	$('.frequency_types').removeClass('active');
+        }
+        else {
+        	$('.frequency_types').addClass('active');
+        }
+	});
+
+	$('input[name="frequency_types"]').on('change',function(){
+		var $this = $(this);
 		 $('label[for="'+ $this.attr('id') +'"]').siblings().removeClass('selected');
 	        $('label[for="'+ $this.attr('id') +'"]').toggleClass('selected');
 	});
@@ -61,6 +74,7 @@ jQuery(document).ready(function($) {
 		$('input[name="a3"]').attr('value', val);
 
 		$('p.notice').removeClass('shown');
+		$('#amount_val').val(val);
 
 	});
 
@@ -74,6 +88,7 @@ jQuery(document).ready(function($) {
 			$('input[name="amount"]').attr('value', val);
 			$('input[name="a3"]').attr('value', val);
 			$('p.notice').removeClass('shown');
+			$('#amount_val').val(val);
 	});
 
 	$('a.continue:not(.two-columns)').on('click', function(e) {

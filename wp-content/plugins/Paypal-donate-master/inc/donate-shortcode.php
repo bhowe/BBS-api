@@ -47,6 +47,16 @@
 	$block7 = (empty($amount7)) ? '1000' : $amount7;
 
 	$errorObj = null;
+
+	$client_id = get_option('paypal_client_id');
+	$secret_key = get_option('paypal_secret_key');
+	$paypalEnv = get_option('paypal_environment');
+	if($paypalEnv == '1') {
+		$apiUrl = 'https://api.paypal.com';
+	}
+	else {
+		$apiUrl = 'https://api-m.sandbox.paypal.com';
+	}
 	
 	ob_start();
 
@@ -294,13 +304,43 @@
 							<label for="amount6" id="lamount6"><input <?php if($errorObj && in_array('designation', $errorObj->errorFields)) echo 'class="styled"'; ?> type="radio" name="os10" id="amount6" value="other"><input type="text" name="os10_other" id="os10_other" placeholder="Enter a custom amount" /></label>
 						</div>
 						<div class="frequency buttongroup control-width">
-						<h4>Choose a donation frequency</h4>
+							<h4>Choose a donation frequency</h4>
 							<div class="buttons-flex two-columns">
 								<label for="frequency1" id="one-time"><input <?php if($errorObj && in_array('designation', $errorObj->errorFields)) echo 'class="styled"'; ?> type="radio"  name="frequency" id="frequency1" value="_donations">One Time</label>
 
 								<label for="frequency2" id="recurring"><input <?php if($errorObj && in_array('designation', $errorObj->errorFields)) echo 'class="styled"'; ?> type="radio"  name="frequency" id="frequency2" value="_xclick-subscriptions">Recurring</label>
 							</div>
-					</div>
+							<div class="buttons-flex two-columns frequency_types">
+								<label for="frequency_number">
+									<select name="frequency_number" id="frequency_number">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option>
+										<option value="9">9</option>
+										<option value="10">10</option>
+										<option value="11">11</option>
+										<option value="12">12</option>
+									</select>
+								</label>
+
+								<!-- <label for="frequency_types"><input <?php if($errorObj && in_array('designation', $errorObj->errorFields)) echo 'class="styled"'; ?> type="radio"  name="frequency_types" id="frequency_month" value="Monthly">Monthly</label>
+
+								<label for="frequency_year" id="recurring"><input <?php if($errorObj && in_array('designation', $errorObj->errorFields)) echo 'class="styled"'; ?> type="radio"  name="frequency_types" id="frequency_year" value="Yearly">Yearly</label> -->
+
+								<label for="frequency_types">
+									<select name="frequency_types" id="frequency_types">
+										<option value="Monthly">Monthly</option>
+										<option value="Yearly">Yearly</option>
+									</select>
+								</label>
+							</div>
+						</div>
+						<input type="hidden" name="amount_val" id="amount_val">
 						<p class="notice">Please enter a donation amount and frequency before continuing</p>
 						<a class="continue">Continue</a>	
 					</div>
@@ -311,52 +351,82 @@
 					<h4><span class="returnto">1. Your Contribution ></span> 2. Your Details</h4>
 					<!--<input type="hidden" name="on0" value="Application-Type" />-->
 					<div class="control-group-wrap">
+
+						<script src="https://www.paypal.com/sdk/js?client-id=<?php echo $client_id; ?>&currency=USD" data-sdk-integration-source="button-factory"></script>
+
+						<textarea name="pay_note" id="pay_note" placeholder="Please Enter Note"></textarea>
+					  	<div id="paypal-button-container"></div>
+
+					  	<script>
+
+					  		function initPayPalButton() {
+						  		var amountVal = document.getElementById('os10_other').value;
+						  		var desc = document.getElementById('pay_note').value;
+
+							    var purchase_units = [];
+							    purchase_units[0] = {};
+							    purchase_units[0].amount = {};
+
+							    console.log('amount - '+amountVal);
+
+						        purchase_units[0].amount.value = amountVal;
+
+						  		paypal.Buttons({
+
+								    createOrder: function(data, actions) {
+
+								      // This function sets up the details of the transaction, including the amount and line item details.
+
+								      return actions.order.create({
+
+								        purchase_units: [{
+
+								          amount: {
+
+								            value: document.getElementById('amount_val').value
+
+								          },
+
+								          description : document.getElementById('pay_note').value
+
+								        }]
+
+								      });
+
+								    },
+
+								    onApprove: function(data, actions) {
+
+								      // This function captures the funds from the transaction.
+
+								      return actions.order.capture().then(function(details) {
+
+								        // This function shows a transaction success message to your buyer.
+
+								        alert('Transaction completed by ' + details.payer.name.given_name);
+
+								        /*actions.redirect('thank_you.html');*/
+
+								      });
+
+								    },
+
+								    onError: function (err) {
+								        console.log(err);
+							      	}
+
+							  	}).render('#paypal-button-container');
+						  	}
+
+						  	//This function displays Smart Payment Buttons on your web page.
+
+						  	initPayPalButton();
+					  	</script>
+
 						
-						<label for="os1">Full Name</label>
-						<input type="text" name="os1" id="os1"  size="30" />
-						<input type="hidden" name="on1" value="Name" />
-						
-						<label for="os2">Email</label>
-						<input type="email" name="os2" id="os2" size="30" />
-
-						<label for="os3">Mailing Address</label>
-						<input type="hidden" name="on3" value="Address" />
-						<input type="text" name="os3" id="os3" size="30" />
-						
-						<div class="flex-inputs">
-							<label for="os4">City
-							<input type="hidden" name="on4" value="City" />
-							<input type="text" name="os4" id="os4" size="30" />
-							</label>
-
-							<label for="os5">State
-							<input type="hidden" name="on5" value="State" />
-							<input type="text" name="os5" id="os5" size="30" />
-							</label>
-
-							<label for="os6">Zip
-							<input type="hidden" name="on6" value="Postal-Code" />
-							<input type="text" name="os6" id="os6" size="30" />
-							</label>
-						</div>
-						
-
-						<!-- <div class="flex-inputs2">
-							<label for="os7">Occupation
-							<input type="hidden" name="on7" value="Occupation" />
-							<input type="text" name="os7" id="os7" size="30" />
-							</label>
-
-							<label for="os8">Employer
-							<input type="hidden" name="on8" value="Employer" />
-							<input type="text" name="os8" id="os8" size="30" />
-							</label>
-						</div> -->
-
-						
-						<input type="hidden" name="amount" value="">
+						<!-- <input type="hidden" name="amount" value="">
 			              
-						<input type="submit" name="send-form" class="paypal-submit" value="Donate" />
+						<input type="submit" name="send-form" class="paypal-submit" value="Donate" /> -->
 					</div>
 				</div>
 
